@@ -16,6 +16,7 @@
 
 package org.activiti.engine.impl.bpmn.behavior;
 
+import org.activiti.bpmn.model.BoundaryEvent;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.delegate.InactiveActivityBehavior;
@@ -72,7 +73,9 @@ public class InclusiveGatewayActivityBehavior extends GatewayActivityBehavior im
     boolean oneExecutionCanReachGateway = false;
     while (!oneExecutionCanReachGateway && executionIterator.hasNext()) {
       ExecutionEntity executionEntity = executionIterator.next();
-      if (!executionEntity.getActivityId().equals(execution.getCurrentActivityId())) {
+      if (BoundaryEvent.class.isInstance(executionEntity.getCurrentFlowElement())) {
+        continue;
+      } else if (!executionEntity.getActivityId().equals(execution.getCurrentActivityId())) {
         boolean canReachGateway = ExecutionGraphUtil.isReachable(execution.getProcessDefinitionId(), executionEntity.getActivityId(), execution.getCurrentActivityId());
         if (canReachGateway) {
           oneExecutionCanReachGateway = true;
