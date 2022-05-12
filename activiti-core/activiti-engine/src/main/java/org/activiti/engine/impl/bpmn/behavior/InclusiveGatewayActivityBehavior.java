@@ -73,11 +73,9 @@ public class InclusiveGatewayActivityBehavior extends GatewayActivityBehavior im
     boolean oneExecutionCanReachGateway = false;
     while (!oneExecutionCanReachGateway && executionIterator.hasNext()) {
       ExecutionEntity executionEntity = executionIterator.next();
-      if (BoundaryEvent.class.isInstance(executionEntity.getCurrentFlowElement())) {
-        continue;
-      } else if (!executionEntity.getActivityId().equals(execution.getCurrentActivityId())) {
+      if (!executionEntity.getActivityId().equals(execution.getCurrentActivityId())) {
         boolean canReachGateway = ExecutionGraphUtil.isReachable(execution.getProcessDefinitionId(), executionEntity.getActivityId(), execution.getCurrentActivityId());
-        if (canReachGateway) {
+        if (canReachGateway && !BoundaryEvent.class.isInstance(executionEntity.getCurrentFlowElement())) {
           oneExecutionCanReachGateway = true;
         }
       } else if (executionEntity.getActivityId().equals(execution.getCurrentActivityId()) && executionEntity.isActive()) {
