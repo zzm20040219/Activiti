@@ -16,7 +16,6 @@
 
 package org.activiti.engine.impl.bpmn.behavior;
 
-import org.activiti.bpmn.model.BoundaryEvent;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.delegate.InactiveActivityBehavior;
