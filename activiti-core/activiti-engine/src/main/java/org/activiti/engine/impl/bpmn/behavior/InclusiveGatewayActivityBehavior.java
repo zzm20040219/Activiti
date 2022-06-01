@@ -73,17 +73,12 @@ public class InclusiveGatewayActivityBehavior extends GatewayActivityBehavior im
     while (!oneExecutionCanReachGatewayInstance && executionIterator.hasNext()) {
       ExecutionEntity executionEntity = executionIterator.next();
       if (!executionEntity.getActivityId().equals(execution.getCurrentActivityId())) {
-          if (ExecutionGraphUtil.isReachable(execution.getProcessDefinitionId(), executionEntity.getActivityId(), execution.getCurrentActivityId())) {
-              //Now check if they are in the same "execution path"
-              if (executionEntity.getParentId().equals(execution.getParentId())) {
-                  oneExecutionCanReachGatewayInstance = true;
-                  break;
-              }
+          if (isSameExecutionPath(execution, executionEntity) && ExecutionGraphUtil.isReachable(execution.getProcessDefinitionId(), executionEntity.getActivityId(), execution.getCurrentActivityId())) {
+              oneExecutionCanReachGatewayInstance = true;
           }
       } else if (executionEntity.getId().equals(execution.getId()) && executionEntity.isActive()) {
         // Special case: the execution has reached the inc gw, but the operation hasn't been executed yet for that execution
         oneExecutionCanReachGatewayInstance = true;
-        break;
       }
     }
 
@@ -105,5 +100,9 @@ public class InclusiveGatewayActivityBehavior extends GatewayActivityBehavior im
       // Leave
       commandContext.getAgenda().planTakeOutgoingSequenceFlowsOperation(execution, true);
     }
+  }
+
+  private boolean isSameExecutionPath(ExecutionEntity gatewayExecution, ExecutionEntity activeExecution) {
+        return activeExecution.getParentId().equals(gatewayExecution.getParentId());
   }
 }
