@@ -29,7 +29,7 @@ import java.util.Map;
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InclusivewithMessage extends PluggableActivitiTestCase {
+public class InclusivewithMessageTest extends PluggableActivitiTestCase {
     private static final String PROCESS_DEFINITION_KEY = "InclusiveTest";
 
     private String deploymentId;
@@ -61,8 +61,6 @@ public class InclusivewithMessage extends PluggableActivitiTestCase {
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         assertThat(task.getName()).isEqualTo("User Task");
         Map<String, Object> variables = new HashMap<>();
-        //variables.put("form51outcome","A");
-        //taskService.complete(task.getId(),variables);
         taskService.complete(task.getId(), singletonMap("form51outcome", "A"));
 
         List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
